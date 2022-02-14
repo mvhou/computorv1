@@ -1,5 +1,3 @@
-const hW = 'world';
+import { parser } from './parser'
 
-export function hello(world: string = hW): string {
-  return `Hello ${world}!`;
-}
+parser("1 + 1 = 2");
