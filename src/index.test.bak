@@ -1,0 +1,7 @@
+import { hello } from './index'
+
+describe('Hello', () => {
+    test('should return "Hello world!" for hello("world")', () => {
+        expect(hello("world")).toBe("Hello world!");
+    });
+});
