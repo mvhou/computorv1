@@ -1,3 +1,10 @@
-import { parser } from './parser'
+import { Parser } from './parser'
+import * as Error from './error'
 
-parser("1 + 1 = 2");
+(() => {
+    if (process.argv.length < 3)
+        Error.handle(0);
+    const parser = new Parser(process.argv[2]);
+    console.log(parser.parse());
+})();
+

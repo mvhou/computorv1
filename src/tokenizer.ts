@@ -1,22 +1,31 @@
+import { T } from 'mvhou-ts';
+import { NumericLiteral } from './tokens'
+
 export class Tokenizer {
-    string:string[];
-    cursor:number;
+    _string:string;
+    _cursor:number;
 
     constructor(str:string) {
-        this.string = str.split('').filter(a => a != ' ');
-        this.cursor = 0;
+        this._string = str;
+        this._cursor = 0;
     }
 
     hasMoretokens() {
-        return this.cursor < this.string.length;
+        return this._cursor < this._string.length;
     }
 
     getNextToken() {
         if (!this.hasMoretokens()) {
             return null;
         }
-        if (!Number.isNaN((this.string[this.cursor]))) {
-            
+        const string = this._string.slice(this._cursor)
+        if (T.isNumber(this._string[this._cursor])) {
+            var newNumber = '';
+            while (T.isNumber(this._string[this._cursor])) {
+                newNumber += this._string[this._cursor];
+                this._cursor++;
+            }
+            return new NumericLiteral(newNumber)
         }
     }
 }
