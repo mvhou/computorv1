@@ -1,50 +1,54 @@
-import { NumericLiteral, Tokens, Token } from './tokens'
+import { NumericLiteral, Tokens, Token, EmptyToken } from './tokens'
 import { Tokenizer } from './tokenizer'
 import * as Error from './error'
 
 class Program {
     type:string
-    body:{}
+    body:Token[]
 
-    constructor (type:string, body:{}) {
+    constructor (type:string, body:Token[]) {
         this.type = type;
         this.body = body;
     }
 }
 
 export class Parser {
-    _string:string
-    _tokenizer:Tokenizer
-    _lookAhead:Token
+    string:string
+    tokenizer:Tokenizer
+    lookAhead:Token
 
     constructor (input:string) {
-        this._string = input;
-        this._tokenizer = new Tokenizer(input);
-        this._lookAhead = this._tokenizer.getNextToken();
+        this.string = input;
+        this.tokenizer = new Tokenizer(input);
+        this.lookAhead = this.tokenizer.getNextToken();
     }
 
+    printState() {
+        console.log(this);
+    }
     parse () {
+        // this.printState()
         return this.Program();
     }
 
     Program() {
-        return new Program('Program', this.NumericLiteral())
-    }
-
-    NumericLiteral() {
-        const token = this._eat(Tokens.Number);
-        return token;
-    }
-
-    _eat(tokenType:Tokens) {
-        const token = this._lookAhead;
-
-        if (token.type === Tokens.Empty) {
-            Error.handle(Error.type.UNEXPECTED_END_OF_INPUT);
-            return {};
+        const tokenArray:Token[] = [];
+        while (this.lookAhead.type !== Tokens.Empty) {
+            var newToken = this.consume();
+            if (newToken.type === Tokens.Empty)
+                break ;
+            tokenArray.push(newToken);
+            this.lookAhead = this.tokenizer.getNextToken();
         }
-        if (token.type == Tokens.Number)
-            return token;
-        return {};
+        return tokenArray;
+    }
+
+    consume() {
+        const token = this.lookAhead;
+        console.log(token);
+
+        if (token.type === Tokens.Empty)
+            Error.handle(Error.type.UNEXPECTED_END_OF_INPUT);
+        return token;
     }
 }
