@@ -1,3 +1,8 @@
+export enum type {
+    NOT_ENOUGH_ARGUMENTS,
+    UNEXPECTED_END_OF_INPUT
+}
+
 export class ErrorContext {
     _cursor:number
     _contextString:string
