@@ -33,9 +33,9 @@ export class Parser {
 
     Program() {
         const tokenArray:Token[] = [];
-        while (this.lookAhead.type !== Tokens.Empty) {
+        while (this.lookAhead.type !== Tokens.EMPTY) {
             var newToken = this.consume();
-            if (newToken.type === Tokens.Empty)
+            if (newToken.type === Tokens.EMPTY)
                 break ;
             tokenArray.push(newToken);
             this.lookAhead = this.tokenizer.getNextToken();
@@ -47,7 +47,7 @@ export class Parser {
         const token = this.lookAhead;
         console.log(token);
 
-        if (token.type === Tokens.Empty)
+        if (token.type === Tokens.EMPTY)
             Error.handle(Error.type.UNEXPECTED_END_OF_INPUT);
         return token;
     }
