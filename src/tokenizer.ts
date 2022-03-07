@@ -1,5 +1,5 @@
 import { T } from 'mvhou-ts';
-import { NumericLiteral } from './tokens'
+import { NumericLiteral, Token, EmptyToken } from './tokens'
 
 export class Tokenizer {
     _string:string;
@@ -14,9 +14,9 @@ export class Tokenizer {
         return this._cursor < this._string.length;
     }
 
-    getNextToken() {
+    getNextToken():Token {
         if (!this.hasMoretokens()) {
-            return null;
+            return new EmptyToken()
         }
         const string = this._string.slice(this._cursor)
         if (T.isNumber(this._string[this._cursor])) {
@@ -27,5 +27,6 @@ export class Tokenizer {
             }
             return new NumericLiteral(newNumber)
         }
+        return new EmptyToken()
     }
 }

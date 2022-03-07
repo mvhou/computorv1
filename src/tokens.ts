@@ -1,13 +1,26 @@
 export enum Tokens {
-    Number
+    Number = 'NumericLiteral',
+    Empty = 'Empty'
 }
 
-export class NumericLiteral {
-    type:string
+export interface Token {
+    type:Tokens
+}
+
+export class NumericLiteral implements Token {
+    type:Tokens
     value:number
 
     constructor(value:string) {
-        this.type = "NumericLiteral"
+        this.type = Tokens.Number
         this.value = +value
+    }
+}
+
+export class EmptyToken implements Token {
+    type:Tokens
+
+    constructor() {
+        this.type = Tokens.Empty
     }
 }

@@ -1,4 +1,4 @@
-import { NumericLiteral, Tokens } from './tokens'
+import { NumericLiteral, Tokens, Token } from './tokens'
 import { Tokenizer } from './tokenizer'
 import * as Error from './error'
 
@@ -15,7 +15,7 @@ class Program {
 export class Parser {
     _string:string
     _tokenizer:Tokenizer
-    _lookAhead:NumericLiteral | null | undefined
+    _lookAhead:Token
 
     constructor (input:string) {
         this._string = input;
@@ -33,14 +33,18 @@ export class Parser {
 
     NumericLiteral() {
         const token = this._eat(Tokens.Number);
-        return new NumericLiteral(token.value)
+        return token;
     }
 
     _eat(tokenType:Tokens) {
         const token = this._lookAhead;
 
-        if (!token) {
-            Error.handle(1)
+        if (token.type === Tokens.Empty) {
+            Error.handle(Error.type.UNEXPECTED_END_OF_INPUT);
+            return {};
         }
+        if (token.type == Tokens.Number)
+            return token;
+        return {};
     }
 }
