@@ -31,9 +31,9 @@ export class NumericLiteral implements Token {
     type:Tokens
     value:number
 
-    constructor(value:string) {
+    constructor(value:number) {
         this.type = Tokens.NUMBER
-        this.value = +value
+        this.value = value
     }
 }
 
