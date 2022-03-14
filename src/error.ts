@@ -14,7 +14,7 @@ export class ErrorContext {
     }
 }
 
-const contextString = (context:ErrorContext) => `${context.contextString} at position ${context.cursor}`;
+const contextString = (context:ErrorContext) => `${context.cursor}\t-> ${context.contextString}`;
 
 export const handle = (code:number, context:ErrorContext|null=null) => {
     const errorPrefix:string = "[ERROR]"
