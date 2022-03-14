@@ -7,4 +7,3 @@ import * as Error from './error'
     const parser = new Parser(process.argv[2]);
     console.log(parser.parse());
 })();
-

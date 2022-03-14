@@ -45,7 +45,7 @@ export class Parser {
 
     consume() {
         const token = this.lookAhead;
-        console.log(token);
+        // console.log(token);
 
         if (token.type === Tokens.EMPTY)
             Error.handle(Error.type.UNEXPECTED_END_OF_INPUT);
