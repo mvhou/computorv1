@@ -2,6 +2,80 @@ import { T } from 'mvhou-ts';
 import * as Error from './error'
 import { NumericLiteral, Token, EmptyToken, StringLiteral } from './tokens'
 
+type State = {
+    name:string
+    next:string[]
+    check:(c:string)=>boolean
+}
+
+const states:Record<string, State> = {
+    start: {
+        name: 'start',
+        next: [
+            'digit',
+            'letter',
+            'sign',
+            'space'
+        ],
+        check: (c:string)=>c!=c
+    },
+    digit: {
+        name: 'digit',
+        next: [
+            'digit',
+            'letter',
+            'operator',
+            'space',
+            'end'
+        ],
+        check: T.isNumber
+    },
+    letter: {
+        name: 'letter',
+        next: [
+            'operator',
+            'space',
+            'end'
+        ],
+        check: T.isAlpha
+    },
+    sign: {
+        name: 'sign',
+        next: [
+            'digit',
+            'letter'
+        ],
+        check: (c:string)=>c=='-'
+    },
+    operator: {
+        name: 'operator',
+        next: [
+            'digit',
+            'letter',
+            'sign'
+        ],
+        check: (c:string)=>['+','-','/','-'].includes(c)
+    },
+    none: {
+        name: 'none',
+        next: [],
+        check: (c:string)=>c!=c
+    }
+}
+
+class StateMachine {
+    state:State
+
+    constructor() {
+        this.state = states['start'];
+    }
+
+    getNextState(c:string):State | null {
+        this.state.next.reduce((acc, state) => (states[state].check(c)) ? state : acc, 'none');
+        return null
+    }
+}
+
 export class Tokenizer {
     string:string;
     cursor:number;
