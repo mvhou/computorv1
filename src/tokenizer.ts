@@ -6,7 +6,6 @@ interface Tokenizer {
     generateToken:(tok:tokenizerState)=>tokenizerState
 }
 
-
 export type tokenizerState = {
     state:State
     input:string
