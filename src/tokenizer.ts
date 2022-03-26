@@ -1,6 +1,7 @@
 import { T } from 'mvhou-ts';
 import * as E from './error'
 import { State, states } from './states'
+
 interface Tokenizer {
     generateToken:(tok:tokenizerState)=>tokenizerState
 }
