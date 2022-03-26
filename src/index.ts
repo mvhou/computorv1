@@ -1,9 +1,12 @@
-import { Parser } from './parser'
-import * as Error from './error'
+// import { Parser } from './parser'
+import { tokenize } from './tokenizer';
+import * as E from './error'
 
 (() => {
     if (process.argv.length < 3)
-        Error.handle(Error.type.NOT_ENOUGH_ARGUMENTS);
-    const parser = new Parser(process.argv[2]);
-    console.log(parser.parse());
+        E.handle(E.newError(E.errorCode.NOT_ENOUGH_ARGUMENTS));
+    var input = process.argv[2];
+    if (process.argv.length > 3)
+        input = process.argv.slice(2).join('');
+    console.log(tokenize(input))
 })();

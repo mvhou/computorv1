@@ -1,30 +1,36 @@
-export enum type {
+export enum errorCode {
     NOT_ENOUGH_ARGUMENTS,
     UNEXPECTED_END_OF_INPUT,
-    INCORRECT_NUMBER
+    INCORRECT_NUMBER,
+    SYNTAX_ERROR,
 }
 
-export class ErrorContext {
-    cursor:number
-    contextString:string
+export type err = {
+    position:number
+    context:string
+    code:errorCode
+}
 
-    constructor(contextString:string, cursor:number=-1) {
-        this.contextString = contextString
-        this.cursor = cursor
+export const newError = (c:errorCode, pos:number=0, ctx:string='') => {
+    return {
+        position: pos,
+        context: ctx,
+        code: c
     }
 }
 
-const contextString = (context:ErrorContext) => `${context.cursor}\t-> ${context.contextString}`;
+const contextString = (error:err) => `${error.position}\t-> ${error.context}`;
 
-export const handle = (code:number, context:ErrorContext|null=null) => {
+export const handle = (error:err) => {
     const errorPrefix:string = "[ERROR]"
     const errors:string[] = [
         'Not enough arguments',
         'Unexpected end of input',
-        'Incorrect numeric literal'
+        'Incorrect numeric literal',
+        'Syntax error'
     ];
-    console.log(errorPrefix, errors[code]);
-    if (context)
-        console.log(contextString(context));
+    console.log(errorPrefix, errors[error.code]);
+    if (error.position)
+        console.log(contextString(error));
     process.exit();
 }
