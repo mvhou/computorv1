@@ -1,56 +1,61 @@
-export enum Tokens {
+export enum tokenType {
     NUMBER = 'NumericLiteral',
     STRING = 'StringLiteral',
     ADD = 'AddOperator',
     EMPTY = 'Empty'
 }
 
-export interface Token {
-    type:Tokens
+export type token = {
+    type:tokenType
+    
 }
 
-export class BinaryExpression implements Token {
-    type:Tokens
-    left:Token
-    right:Token
+// export interface Token {
+//     type:Tokens
+// }
 
-    constructor(left:Token, right:Token, type:Tokens) {
-        this.type = type
-        this.left = left
-        this.right = right
-    }
-}
+// export class BinaryExpression implements Token {
+//     type:Tokens
+//     left:Token
+//     right:Token
 
-export class Add extends BinaryExpression {
-    constructor(left:Token, right:Token, type:Tokens) {
-        super(left, right, type);
-    }
-}
+//     constructor(left:Token, right:Token, type:Tokens) {
+//         this.type = type
+//         this.left = left
+//         this.right = right
+//     }
+// }
 
-export class NumericLiteral implements Token {
-    type:Tokens
-    value:number
+// export class Add extends BinaryExpression {
+//     constructor(left:Token, right:Token, type:Tokens) {
+//         super(left, right, type);
+//     }
+// }
 
-    constructor(value:number) {
-        this.type = Tokens.NUMBER
-        this.value = value
-    }
-}
+// export class NumericLiteral implements Token {
+//     type:Tokens
+//     value:number
 
-export class StringLiteral implements Token {
-    type:Tokens
-    name:string
+//     constructor(value:number) {
+//         this.type = Tokens.NUMBER
+//         this.value = value
+//     }
+// }
 
-    constructor(name:string) {
-        this.type = Tokens.STRING
-        this.name = name
-    }
-}
+// export class StringLiteral implements Token {
+//     type:Tokens
+//     name:string
 
-export class EmptyToken implements Token {
-    type:Tokens
+//     constructor(name:string) {
+//         this.type = Tokens.STRING
+//         this.name = name
+//     }
+// }
 
-    constructor() {
-        this.type = Tokens.EMPTY
-    }
-}
+// export class EmptyToken implements Token {
+//     type:Tokens
+
+//     constructor() {
+//         this.type = Tokens.EMPTY
+//     }
+// }
