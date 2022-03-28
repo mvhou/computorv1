@@ -1,16 +1,16 @@
-import { NumericLiteral, Tokens, Token, EmptyToken } from './tokens'
+// import { NumericLiteral, Tokens, Token, EmptyToken } from './tokens'
 import { tokenize } from './tokenizer'
 import * as Error from './error'
 
-class Program {
-    type:string
-    body:Token[]
+// class Program {
+//     type:string
+//     body:Token[]
 
-    constructor (type:string, body:Token[]) {
-        this.type = type;
-        this.body = body;
-    }
-}
+//     constructor (type:string, body:Token[]) {
+//         this.type = type;
+//         this.body = body;
+//     }
+// }
 
 // export class Parser {
 //     string:string

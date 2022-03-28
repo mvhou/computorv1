@@ -1,6 +1,7 @@
 import { T } from 'mvhou-ts';
 import * as E from './error'
 import { State, states } from './states'
+import { token, tokenType } from './tokens'
 
 interface Tokenizer {
     generateToken:(tok:tokenizerState)=>tokenizerState
@@ -11,7 +12,7 @@ export type tokenizerState = {
     input:string
     cursor:number
     sign:number
-    tokens:string[]
+    tokens:token[]
 }
 
 class NumericToken implements Tokenizer {
@@ -22,7 +23,7 @@ class NumericToken implements Tokenizer {
         var newNumber = ['', '-'][tok.sign] + tok.input.slice(start, tok.cursor)
         if (isNaN(+newNumber))
             E.handle(E.newError(E.errorCode.INCORRECT_NUMBER, start, newNumber+""))
-        tok.tokens.push(newNumber);
+        tok.tokens.push({ type: tokenType.NUMBER, value: newNumber });
         tok.sign = 0;
         return tok
     }
@@ -33,7 +34,7 @@ class StringToken implements Tokenizer {
         var newString = ['', '-'][tok.sign];
         while (T.isAlpha(tok.input[tok.cursor]))
             newString += tok.input[tok.cursor++]
-        tok.tokens.push(newString);
+        tok.tokens.push({ type: tokenType.STRING, value: newString });
         tok.sign = 0;
         return tok
     }
@@ -41,7 +42,7 @@ class StringToken implements Tokenizer {
 
 class OperatorToken implements Tokenizer {
     generateToken(tok:tokenizerState):tokenizerState {
-        tok.tokens.push(tok.input[tok.cursor])
+        tok.tokens.push({ type: tokenType.OPERATOR, value: tok.input[tok.cursor] })
         tok.cursor++
         return tok
     }
@@ -69,7 +70,9 @@ const actions:Record<string, Tokenizer> = {
     sign: new SignToken()
 }
 
-export const tokenize = (input:string):string[] => {
+
+
+export const tokenize = (input:string):token[] => {
     var tok:tokenizerState = newState({
         state: states['start'],
         input: input,
@@ -91,7 +94,7 @@ const validateInput = (tok:tokenizerState) => {
         E.handle(E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT));
     if (tok.state.name === 'none')
         E.handle(E.newError(E.errorCode.SYNTAX_ERROR, tok.cursor+1, tok.input[tok.cursor]));
-    var eqCount = tok.tokens.reduce((acc, x) => acc + ((x == '=') ? 1 : 0),0);
+    var eqCount = tok.tokens.reduce((acc, x) => acc + ((x.value == '=') ? 1 : 0),0);
     if (eqCount == 0)
         E.handle(E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT))
     if (eqCount > 1)
