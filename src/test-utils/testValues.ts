@@ -1,8 +1,9 @@
 import { token, tokenType } from '../tokens'
+import * as E from '../error'
 
 export type tokenizerTest = {
     input:string
-    output:token[]
+    output:any
 }
 
 export const validTests:tokenizerTest[] = [
@@ -45,6 +46,22 @@ export const validTests:tokenizerTest[] = [
 export const invalidTests:tokenizerTest[] = [
     {
         input: "",
-        output: []
-    }
+        output: {code: E.errorCode.UNEXPECTED_END_OF_INPUT, context: "", position: 0}
+    },
+    {
+        input: "1",
+        output: {code: E.errorCode.UNEXPECTED_END_OF_INPUT, context: "", position: 0}
+    },
+    {
+        input: "1+",
+        output: {code: E.errorCode.UNEXPECTED_END_OF_INPUT, context: "", position: 0}
+    },
+    {
+        input: "1+1",
+        output: {code: E.errorCode.UNEXPECTED_END_OF_INPUT, context: "", position: 0}
+    },
+    {
+        input: "1+1=",
+        output: {code: E.errorCode.UNEXPECTED_END_OF_INPUT, context: "", position: 0}
+    },
 ]
