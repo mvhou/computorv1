@@ -19,6 +19,8 @@ export const newError = (c:errorCode, pos:number=0, ctx:string='') => {
     }
 }
 
+export const isError = (a:any): a is err => a.position !== undefined
+
 const contextString = (error:err) => `${error.position}\t-> ${error.context}`;
 
 export const handle = (error:err) => {

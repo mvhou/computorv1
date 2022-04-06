@@ -72,7 +72,7 @@ const actions:Record<string, Tokenizer> = {
 
 
 
-export const tokenize = (input:string):token[] => {
+export const tokenize = (input:string):token[] | E.err => {
     var tok:tokenizerState = newState({
         state: states['start'],
         input: input,
@@ -85,20 +85,20 @@ export const tokenize = (input:string):token[] => {
         tok = actions[tok.state.name].generateToken(tok)
         tok = newState(tok)
     }
-    validateInput(tok);
-    return tok.tokens
+    return validateInput(tok);
 }
 
-const validateInput = (tok:tokenizerState) => {
+const validateInput = (tok:tokenizerState):token[] | E.err => {
     if (tok.cursor >= tok.input.length && tok.state.name != 'end')
-        E.handle(E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT));
+        return E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT)
     if (tok.state.name === 'none')
-        E.handle(E.newError(E.errorCode.SYNTAX_ERROR, tok.cursor+1, tok.input[tok.cursor]));
+        return E.newError(E.errorCode.SYNTAX_ERROR, tok.cursor+1, tok.input[tok.cursor])
     var eqCount = tok.tokens.reduce((acc, x) => acc + ((x.value == '=') ? 1 : 0),0);
     if (eqCount == 0)
-        E.handle(E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT))
+        return E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT)
     if (eqCount > 1)
-        E.handle(E.newError(E.errorCode.SYNTAX_ERROR))
+        return E.newError(E.errorCode.SYNTAX_ERROR)
+    return tok.tokens
 }
 
 
