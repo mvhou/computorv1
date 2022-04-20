@@ -1,60 +1,25 @@
-// import { NumericLiteral, Tokens, Token, EmptyToken } from './tokens'
-import { tokenize } from './tokenizer'
-import * as Error from './error'
+import { Operation, Literal, operation, ASTnode, orderOfOp  } from "./types/parser"
+import { token } from './types/tokens'
 
-// class Program {
-//     type:string
-//     body:Token[]
+const opMap:Record<string, operation> = {
+  '=': (a,b)=> +(a == b),
+  '+': (a,b)=> a + b,
+  '-': (a,b)=> a + b,
+  '*': (a,b)=> a * b,
+  '/': (a,b)=> a / b,
+  '^': (a,b)=> Math.pow(a, b)
+}
 
-//     constructor (type:string, body:Token[]) {
-//         this.type = type;
-//         this.body = body;
-//     }
-// }
+const opOrder = (a:string):number => orderOfOp[a] || -1
 
-// export class Parser {
-//     string:string
-//     tokenizer:Tokenizer
 
-//     constructor (input:string) {
-//         this.string = input;
-//         this.tokenizer = new Tokenizer(input);
-//     }
-
-//     printState() {
-//         console.log(this);
-//     }
-//     parse () {
-//         // this.printState()
-//         return this.Program();
-//     }
-
-//     Program() {
-//         if (this.tokenizer.getNextToken())
-//             console.log("SUCCESS!")
-//         else
-//             console.log("FAIL!")
-//         return this.tokenizer.tokens;
-//     }
-
-//     // Program() {
-//     //     const tokenArray:Token[] = [];
-//     //     while (this.lookAhead.type !== Tokens.EMPTY) {
-//     //         var newToken = this.consume();
-//     //         if (newToken.type === Tokens.EMPTY)
-//     //             break ;
-//     //         tokenArray.push(newToken);
-//     //         this.lookAhead = this.tokenizer.getNextToken();
-//     //     }
-//     //     return tokenArray;
-//     // }
-
-//     // consume() {
-//     //     const token = this.lookAhead;
-//     //     // console.log(token);
-
-//     //     if (token.type === Tokens.EMPTY)
-//     //         Error.handle(Error.code.UNEXPECTED_END_OF_INPUT);
-//     //     return token;
-//     // }
-// }
+export const parse = (tokens:token[]):ASTnode => {
+  if (tokens.length === 1) 
+      return new Literal(+tokens[0].value)
+  const next = tokens.reduce((acc, x, idx) => {
+      if (opOrder(x.value) > opOrder(tokens[acc].value))
+          return idx
+      return acc
+  }, 0)
+  return new Operation(parse(tokens.slice(0, next)), parse(tokens.slice(next+1)), opMap[tokens[next].value])
+}

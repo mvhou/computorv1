@@ -1,4 +1,4 @@
-import { token, tokenType } from '../tokens'
+import { token, tokenType } from '../types/tokens'
 import * as E from '../error'
 
 export type tokenizerTest = {
