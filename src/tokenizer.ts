@@ -100,3 +100,38 @@ const validateInput = (tok:tokenizerState):token[] | E.err => {
         return E.newError(E.errorCode.SYNTAX_ERROR)
     return tok.tokens
 }
+
+// const keyWords = [
+//     '++',
+//     '--',
+//     '+',
+//     '-',
+//     '=',
+//     '==',
+//     '!=',
+//     '>',
+//     '<',
+//     '>=',
+//     '<=',
+//     '/',
+//     '%',
+//     '*',
+//     '**',
+//     '^',
+//     '(',
+//     ')',
+//     '[',
+//     ']',
+// ]
+
+// const getNextToken = (input) => keyWords.filter((e) => input.startsWith(e)).reduce((acc, e) => (e.length > acc.length) ? e : acc, '')
+// // const getNextToken = (input:string):string => keyWords.filter((e) => input.startsWith(e))
+// //                                                 .reduce((acc, e) => (e.length > acc.length) ? e : acc, '')
+
+// const tokenize = (input:string):token[] => {
+//     const strToParse = input.split(' ');
+//     strToParse.forEach((s) => {
+
+//     })
+//     return []
+// }
