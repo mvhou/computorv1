@@ -10,10 +10,10 @@ export const validTests:tokenizerTest[] = [
     {
         input: "x^2=4",
         output: [
-            { type: tokenType.STRING, value: 'x' },
-            { type: tokenType.OPERATOR, value: '^' },
+            { type: tokenType.VARIABLE, value: 'x' },
+            { type: tokenType.BINARY, value: '^' },
             { type: tokenType.NUMBER, value: '2' },
-            { type: tokenType.OPERATOR, value: '=' },
+            { type: tokenType.BINARY, value: '=' },
             { type: tokenType.NUMBER, value: '4' }
         ]
     },
@@ -21,11 +21,11 @@ export const validTests:tokenizerTest[] = [
         input: "4*x^2=16",
         output: [
             { type: tokenType.NUMBER, value: '4' },
-            { type: tokenType.OPERATOR, value: '*' },
-            { type: tokenType.STRING, value: 'x' },
-            { type: tokenType.OPERATOR, value: '^' },
+            { type: tokenType.BINARY, value: '*' },
+            { type: tokenType.VARIABLE, value: 'x' },
+            { type: tokenType.BINARY, value: '^' },
             { type: tokenType.NUMBER, value: '2' },
-            { type: tokenType.OPERATOR, value: '=' },
+            { type: tokenType.BINARY, value: '=' },
             { type: tokenType.NUMBER, value: '16' }
         ]
     },
@@ -33,12 +33,12 @@ export const validTests:tokenizerTest[] = [
         input: "3*2^2=x",
         output: [
             { type: tokenType.NUMBER, value: '3' },
-            { type: tokenType.OPERATOR, value: '*' },
+            { type: tokenType.BINARY, value: '*' },
             { type: tokenType.NUMBER, value: '2' },
-            { type: tokenType.OPERATOR, value: '^' },
+            { type: tokenType.BINARY, value: '^' },
             { type: tokenType.NUMBER, value: '2' },
-            { type: tokenType.OPERATOR, value: '=' },
-            { type: tokenType.STRING, value: 'x' }
+            { type: tokenType.BINARY, value: '=' },
+            { type: tokenType.VARIABLE, value: 'x' }
         ]
     },
 ]

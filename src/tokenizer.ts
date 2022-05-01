@@ -1,7 +1,7 @@
 import { T } from 'mvhou-ts';
 import * as E from './error'
-import { State, states } from './states'
-import { token, tokenType } from './types/tokens'
+import { State, states } from './types/states'
+import { token, tokenType, newToken } from './types/tokens'
 
 interface Tokenizer {
     generateToken:(tok:tokenizerState)=>tokenizerState
@@ -34,7 +34,7 @@ class StringToken implements Tokenizer {
         var newString = ['', '-'][tok.sign];
         while (T.isAlpha(tok.input[tok.cursor]))
             newString += tok.input[tok.cursor++]
-        tok.tokens.push({ type: tokenType.STRING, value: newString });
+        tok.tokens.push({ type: tokenType.VARIABLE, value: newString });
         tok.sign = 0;
         return tok
     }
@@ -42,7 +42,7 @@ class StringToken implements Tokenizer {
 
 class OperatorToken implements Tokenizer {
     generateToken(tok:tokenizerState):tokenizerState {
-        tok.tokens.push({ type: tokenType.OPERATOR, value: tok.input[tok.cursor] })
+        tok.tokens.push({ type: tokenType.BINARY, value: tok.input[tok.cursor] })
         tok.cursor++
         return tok
     }
@@ -52,7 +52,7 @@ class SignToken implements Tokenizer {
     generateToken(tok:tokenizerState):tokenizerState {
         tok.sign = 1
         tok.cursor++
-        return tok
+        return tok 
     }
 }
 
@@ -70,36 +70,39 @@ const actions:Record<string, Tokenizer> = {
     sign: new SignToken()
 }
 
+export const doTheThing = (tok:tokenizerState):tokenizerState => {
+    if (['none', 'end'].includes(tok.state.name))
+        return tok;
+    return (doTheThing(newState(actions[tok.state.name].generateToken(tok))))
+}
 
-
-export const tokenize = (input:string):token[] => {
-    var tok:tokenizerState = newState({
+export const tokenize = (input:string):tokenizerState => doTheThing(newState({
         state: states['start'],
         input: input,
         cursor: 0,
         sign: 0,
         tokens: []
-    })
-    
-    while (!['none', 'end'].includes(tok.state.name)) {
-        tok = actions[tok.state.name].generateToken(tok)
-        tok = newState(tok)
-    }
-    return tok.tokens;
-}
+    }));
 
-const validateInput = (tok:tokenizerState):token[] | E.err => {
-    if (tok.cursor >= tok.input.length && tok.state.name != 'end')
-        return E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT)
-    if (tok.state.name === 'none')
-        return E.newError(E.errorCode.SYNTAX_ERROR, tok.cursor+1, tok.input[tok.cursor])
-    var eqCount = tok.tokens.reduce((acc, x) => acc + ((x.value == '=') ? 1 : 0),0);
-    if (eqCount == 0)
-        return E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT)
-    if (eqCount > 1)
-        return E.newError(E.errorCode.SYNTAX_ERROR)
-    return tok.tokens
+export const validateInput = (tok:tokenizerState):tokenizerState | E.err => {
+    // if (tok.cursor >= tok.input.length && tok.state.name != 'end')
+    //     return E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT)
+    // if (tok.state.name === 'none')
+    //     return E.newError(E.errorCode.SYNTAX_ERROR, tok.cursor+1, tok.input)
+    // var eqCount = tok.tokens.reduce((acc, x) => acc + ((x.value == '=') ? 1 : 0),0);
+    // if (eqCount == 0)
+    //     return E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT)
+    // if (eqCount > 1)
+    //     return E.newError(E.errorCode.SYNTAX_ERROR)
+    return tok;
 }
+// const thingy:Record<string, state[]>
+
+// type state = {
+//     name:string
+    
+//     check:(c:string) => boolean
+// }
 
 // const keyWords = [
 //     '++',
@@ -124,14 +127,51 @@ const validateInput = (tok:tokenizerState):token[] | E.err => {
 //     ']',
 // ]
 
-// const getNextToken = (input) => keyWords.filter((e) => input.startsWith(e)).reduce((acc, e) => (e.length > acc.length) ? e : acc, '')
-// // const getNextToken = (input:string):string => keyWords.filter((e) => input.startsWith(e))
-// //                                                 .reduce((acc, e) => (e.length > acc.length) ? e : acc, '')
+// const literal = /([0-9]+([\.]+)?([0-9]+)?)|([[A-z]+([\d]+)?)/
 
-// const tokenize = (input:string):token[] => {
-//     const strToParse = input.split(' ');
-//     strToParse.forEach((s) => {
+// // const getNextToken = (input) => keyWords.filter((e) => input.startsWith(e)).reduce((acc, e) => (e.length > acc.length) ? e : acc, '')
+// // // const getNextToken = (input:string):string => keyWords.filter((e) => input.startsWith(e))
+// // //                                                 .reduce((acc, e) => (e.length > acc.length) ? e : acc, '')
 
+// const tjhjhjhjhjakeWhile = (a:any[] | string, q:any):any[] => {
+//     let i = 0;
+//     let ret = [];
+//     while (i < a.length && q(a[i])) {
+//         ret.push(a[i]);
+//         i++;
+//     }
+//     return ret;
+// }
+
+// const getLiteral = (input:string):token => {
+//     const value = literal.exec(input)[0] || 'fail'
+//     return newToken([tokenType.NUMBER, tokenType.VARIABLE][+T.isAlpha(value[0])], value)
+// }
+
+// //[\d]+([\.]+)?[\d]+ numbers
+// //[A-z]+([\d]+)? letters
+
+
+// const getNextToken = (input:string):token => {
+//     let ret:string = keyWords.filter((e) => input.startsWith(e))
+//                         .reduce((acc, e) => (e.length > acc.length) ? e : acc, '');
+//     if (literal.test(input[0]))
+//         return getLiteral(input);
+//     return newToken(tokenType.BINARY, ret)
+// }
+
+
+// export const tokenize = (input:string):token[] => {
+//     const tokens:token[] = [];
+//     const strToParse:string[] = input.split(' ');
+//     strToParse.forEach((s:string) => {
+//         let i = 0;
+//         let temp;
+//         while (i < s.length) {
+//             temp = getNextToken(input.slice(i));
+//             i += temp.value.length;
+//             tokens.push(temp);
+//         }
 //     })
-//     return []
+//     return tokens;
 // }

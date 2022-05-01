@@ -1,11 +1,14 @@
 export enum tokenType {
-    NUMBER = 'NumericLiteral',
-    STRING = 'StringLiteral',
-    OPERATOR = 'Operator',
-    EMPTY = 'Empty'
+    NUMBER = 'numeric',
+    VARIABLE = 'variable',
+    BINARY = 'operator',
+    UNARY = 'operator',
+    EMPTY = 'empty'
 }
 
 export type token = {
     type:tokenType
     value:string
 }
+
+export const newToken = (t:tokenType, v:string) => ({ type: t, value: v, })

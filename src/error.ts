@@ -1,3 +1,5 @@
+import { S } from 'mvhou-ts'
+
 export enum errorCode {
     NOT_ENOUGH_ARGUMENTS,
     UNEXPECTED_END_OF_INPUT,
@@ -21,7 +23,7 @@ export const newError = (c:errorCode, pos:number=0, ctx:string='') => {
 
 export const isError = (a:any): a is err => a.position !== undefined
 
-const contextString = (error:err) => `${error.position}\t-> ${error.context}`;
+const contextString = (error:err) => `${S.padFront(error.context, error.context.length)}`;
 
 export const handle = (error:err) => {
     const errorPrefix:string = "[ERROR]"
@@ -31,8 +33,20 @@ export const handle = (error:err) => {
         'Incorrect numeric literal',
         'Syntax error'
     ];
-    console.log(errorPrefix, errors[error.code]);
-    if (error.position)
+    console.log(errorPrefix, errors[error.code], ((error.position > 0) ? `at position ${error.position}` : ''));
+    if (error.position) {
         console.log(contextString(error));
+        console.log(S.padFront('^', error.position));
+    }
     process.exit();
 }
+
+// 1 - - 1 = 2
+//                                                          1 - - 1
+//                                                            -
+//                                                      1                  u1
+//                                                                          *
+//                                                                     -1       1
+//
+//                                                              -
+//                                                                     
