@@ -12,7 +12,7 @@ export const states:Record<string, State> = {
         next: [
             'numeric',
             'string',
-            'sign',
+            'unary',
         ],
         check: (c:string)=>c!=c
     },
@@ -20,33 +20,34 @@ export const states:Record<string, State> = {
         name: 'numeric',
         next: [
             'string',
-            'operator',
+            'binary',
             'end'
         ],
-        check: T.isNumber
+        check: (c:string) => T.isNumber(c) || c == '.'
     },
     string: {
         name: 'string',
         next: [
-            'operator',
+            'binary',
             'end'
         ],
         check: T.isAlpha
     },
-    sign: {
-        name: 'sign',
-        next: [
-            'numeric',
-            'string'
-        ],
-        check: (c:string)=>c=='-'
-    },
-    operator: {
-        name: 'operator',
+    unary: {
+        name: 'unary',
         next: [
             'numeric',
             'string',
-            'sign'
+            'unary'
+        ],
+        check: (c:string)=>['-', '+'].includes(c)
+    },
+    binary: {
+        name: 'binary',
+        next: [
+            'numeric',
+            'string',
+            'unary'
         ],
         check: (c:string)=>['+','-','/','*', '^', '='].includes(c)
     },

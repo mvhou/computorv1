@@ -10,9 +10,9 @@ describe('Valid input', () => {
     ))
 })
 
-describe('Invalid input', () => {
-    invalidTests.forEach((t:tokenizerTest) => test(
-        `Should return ${JSON.stringify(t.output)} for tokenize("${t.input}")`,
-        () => expect(tokenize(t.input)).toStrictEqual(t.output)
-    ))
-})
+// describe('Invalid input', () => {
+//     invalidTests.forEach((t:tokenizerTest) => test(
+//         `Should return ${JSON.stringify(t.output)} for tokenize("${t.input}")`,
+//         () => expect(tokenize(t.input)).toStrictEqual(t.output)
+//     ))
+// })

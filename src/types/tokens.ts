@@ -1,8 +1,8 @@
 export enum tokenType {
     NUMBER = 'numeric',
     VARIABLE = 'variable',
-    BINARY = 'operator',
-    UNARY = 'operator',
+    BINARY = 'binary',
+    UNARY = 'unary',
     EMPTY = 'empty'
 }
 

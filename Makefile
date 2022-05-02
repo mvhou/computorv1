@@ -6,3 +6,6 @@ watch:
 
 test:
 	npm test
+
+clean:
+	rm -rf build/*
