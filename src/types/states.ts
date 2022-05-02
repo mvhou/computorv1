@@ -11,7 +11,7 @@ export const states:Record<string, State> = {
         name: 'start',
         next: [
             'numeric',
-            'string',
+            'variable',
             'unary',
         ],
         check: (c:string)=>c!=c
@@ -19,14 +19,13 @@ export const states:Record<string, State> = {
     numeric: {
         name: 'numeric',
         next: [
-            'string',
             'binary',
             'end'
         ],
         check: (c:string) => T.isNumber(c) || c == '.'
     },
-    string: {
-        name: 'string',
+    variable: {
+        name: 'variable',
         next: [
             'binary',
             'end'
@@ -37,7 +36,7 @@ export const states:Record<string, State> = {
         name: 'unary',
         next: [
             'numeric',
-            'string',
+            'variable',
             'unary'
         ],
         check: (c:string)=>['-', '+'].includes(c)
@@ -46,10 +45,10 @@ export const states:Record<string, State> = {
         name: 'binary',
         next: [
             'numeric',
-            'string',
+            'variable',
             'unary'
         ],
-        check: (c:string)=>['+','-','/','*', '^', '='].includes(c)
+        check: (c:string)=>['+','-','/','*', '^', '=', '=='].includes(c)
     },
     end: {
         name: 'end',

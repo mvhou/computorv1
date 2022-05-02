@@ -26,14 +26,13 @@ export const isError = (a:any): a is err => a.position !== undefined
 const contextString = (error:err) => `${S.padFront(error.context, error.context.length)}`;
 
 export const handle = (error:err) => {
-    const errorPrefix:string = "[ERROR]"
     const errors:string[] = [
         'Not enough arguments',
         'Unexpected end of input',
         'Incorrect numeric literal',
         'Syntax error'
     ];
-    console.log(errorPrefix, errors[error.code], ((error.position > 0) ? `at position ${error.position}` : ''));
+    console.log(errors[error.code], ((error.position > 0) ? `at position ${error.position}` : ''));
     if (error.position) {
         console.log(contextString(error));
         console.log(S.padFront('^', error.position));

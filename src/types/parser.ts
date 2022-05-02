@@ -2,9 +2,9 @@ export interface ASTnode {
   eval:()=>number
 }
 
-export type binaryOperation = (a:number, b:number) => number
+export type binaryOperation = (a:number, b:number) => number;
 
-export type unaryOperation = (a:number) => number
+export type unaryOperation = (a:number) => number;
 
 export class Literal implements ASTnode {
   value:number

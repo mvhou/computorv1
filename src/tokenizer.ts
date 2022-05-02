@@ -14,8 +14,6 @@ export type tokenizerState = {
     tokens:token[]
 }
 
-type test = string & number
-
 class NumericToken implements Tokenizer {
     generateToken(tok:tokenizerState):tokenizerState {
         var start = tok.cursor;
@@ -23,13 +21,13 @@ class NumericToken implements Tokenizer {
             tok.cursor++
         var newNumber = tok.input.slice(start, tok.cursor)
         if (isNaN(+newNumber))
-            E.handle(E.newError(E.errorCode.INCORRECT_NUMBER, start, newNumber+""))
+            E.handle(E.newError(E.errorCode.SYNTAX_ERROR, start+1, tok.input))
         tok.tokens.push({ type: tokenType.NUMBER, value: newNumber });
         return tok
     }
 }
 
-class StringToken implements Tokenizer {
+class VariableToken implements Tokenizer {
     generateToken(tok:tokenizerState):tokenizerState {
         var newString = '';
         while (T.isAlpha(tok.input[tok.cursor]))
@@ -49,7 +47,7 @@ class BinaryToken implements Tokenizer {
 
 class UnaryToken implements Tokenizer {
     generateToken(tok:tokenizerState):tokenizerState {
-        tok.tokens.push({ type: tokenType.UNARY, value: '_' })
+        tok.tokens.push({ type: tokenType.UNARY, value: ['_', '~'][+(tok.input[tok.cursor] == '+')] })
         tok.cursor++
         return tok 
     }
@@ -64,13 +62,10 @@ const newState = (tok:tokenizerState):tokenizerState => {
 
 const actions:Record<string, Tokenizer> = {
     numeric: new NumericToken(),
-    string: new StringToken(),
+    variable: new VariableToken(),
     binary: new BinaryToken(),
     unary: new UnaryToken()
 }
-
-//3 * 3 + 3
-//
 
 export const doTheThing = (tok:tokenizerState):tokenizerState => {
     if (['none', 'end'].includes(tok.state.name))
@@ -78,24 +73,18 @@ export const doTheThing = (tok:tokenizerState):tokenizerState => {
     return (doTheThing(newState(actions[tok.state.name].generateToken(tok))))
 }
 
-export const tokenize = (input:string):token[] => doTheThing(newState({
+export const tokenize = (input:string):tokenizerState => doTheThing(newState({
         state: states['start'],
         input: input,
         cursor: 0,
         tokens: []
-    })).tokens;
+    }));
 
-export const validateInput = (tok:tokenizerState):tokenizerState | E.err => {
-    if (tok.cursor >= tok.input.length && tok.state.name != 'end')
-        return E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT)
-    if (tok.state.name === 'none')
-        return E.newError(E.errorCode.SYNTAX_ERROR, tok.cursor+1, tok.input)
-    var eqCount = tok.tokens.reduce((acc, x) => acc + ((x.value == '=') ? 1 : 0),0);
-    if (eqCount == 0)
-        return E.newError(E.errorCode.UNEXPECTED_END_OF_INPUT)
-    if (eqCount > 1)
-        return E.newError(E.errorCode.SYNTAX_ERROR)
-    return tok;
+export const validateInput = (tok:tokenizerState):token[] => {
+    console.log(tok);
+    if ((tok.cursor >= tok.input.length && tok.state.name != 'end') || tok.state.name === 'none')
+        E.handle(E.newError(E.errorCode.SYNTAX_ERROR, tok.cursor+1, tok.input));
+    return tok.tokens;
 }
 // const thingy:Record<string, state[]>
 

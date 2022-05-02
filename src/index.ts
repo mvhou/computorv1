@@ -9,9 +9,9 @@ import util from 'util'
     var input = process.argv[2];
     if (process.argv.length > 3)
         input = process.argv.slice(2).join('');
-    var tokens = tokenize(input);
+    var tokens = validateInput(tokenize(input));
     var syntaxTree = parse(tokens);
-    // console.log(util.inspect(syntaxTree, {showHidden: false, depth: null, colors: true}));
+    console.log(util.inspect(syntaxTree, {showHidden: false, depth: null, colors: true}));
     console.log(syntaxTree.eval());
     // ([console.log, E.handle][+E.isError(tokens)])(tokens)
 })();
