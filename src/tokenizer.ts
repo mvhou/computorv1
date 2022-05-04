@@ -81,7 +81,6 @@ export const tokenize = (input:string):tokenizerState => doTheThing(newState({
     }));
 
 export const validateInput = (tok:tokenizerState):token[] => {
-    console.log(tok);
     if ((tok.cursor >= tok.input.length && tok.state.name != 'end') || tok.state.name === 'none')
         E.handle(E.newError(E.errorCode.SYNTAX_ERROR, tok.cursor+1, tok.input));
     return tok.tokens;

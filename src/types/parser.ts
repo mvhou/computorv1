@@ -2,10 +2,7 @@ export interface ASTnode {
   eval:()=>number
 }
 
-export type binaryOperation = (a:number, b:number) => number;
-
-export type unaryOperation = (a:number) => number;
-
+export type operation = (...arg:number[]) => number
 export class Literal implements ASTnode {
   value:number
 
@@ -17,10 +14,10 @@ export class Literal implements ASTnode {
 }
 
 export class UnOp implements ASTnode {
-  op:unaryOperation
+  op:operation
   numThing:ASTnode
 
-  constructor(n:ASTnode,o:unaryOperation) {
+  constructor(n:ASTnode,o:operation) {
     this.numThing = n;
     this.op = o;
   }
@@ -29,29 +26,15 @@ export class UnOp implements ASTnode {
 }
 
 export class BinOp implements ASTnode {
-  op:binaryOperation
+  op:operation
   left:ASTnode
   right:ASTnode
 
-  constructor(l:ASTnode, r:ASTnode, o:binaryOperation) {
+  constructor(l:ASTnode, r:ASTnode, o:operation) {
       this.op = o;
       this.left = l;
       this.right = r;
   }
 
   eval = () => this.op(this.left.eval(), this.right.eval())
-}
-
-export const orderOfOp:Record<string, number> = {
-  '^': 1,
-  '*': 2,
-  '/': 2,
-  '+': 3,
-  '-': 3,
-  '=': 4,
-}
-
-export enum operators {
-  UNARY,
-
 }

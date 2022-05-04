@@ -11,7 +11,7 @@ import util from 'util'
         input = process.argv.slice(2).join('');
     var tokens = validateInput(tokenize(input));
     var syntaxTree = parse(tokens);
-    console.log(util.inspect(syntaxTree, {showHidden: false, depth: null, colors: true}));
+    // console.log(util.inspect(syntaxTree, {showHidden: false, depth: null, colors: true}));
     console.log(syntaxTree.eval());
     // ([console.log, E.handle][+E.isError(tokens)])(tokens)
 })();

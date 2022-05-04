@@ -1,10 +1,10 @@
-import { BinOp, Literal, binaryOperation, ASTnode, UnOp, unaryOperation } from "./types/parser"
+import { BinOp, Literal, ASTnode, UnOp, operation } from "./types/parser"
 import { token } from './types/tokens'
 import * as E from './error'
 
-const opMap:Record<string, unaryOperation | binaryOperation> = {
-  '~': (a:number)=>+a,
-  '_': (a:number)  => -a,
+const opMap:Record<string, operation> = {
+  '~': (a)  => +a,
+  '_': (a)  => -a,
   '=': (a,b)=> +(a == b),
   '+': (a,b)=> a + b,
   '-': (a,b)=> a - b,
@@ -12,15 +12,6 @@ const opMap:Record<string, unaryOperation | binaryOperation> = {
   '/': (a,b)=> a / b,
   '^': (a,b)=> Math.pow(a, b)
 }
-
-// export const orderOfOp:Record<string, number> = {
-//   '^': 1,
-//   '*': 2,
-//   '/': 2,
-//   '+': 3,
-//   '-': 3,
-//   '=': 4,
-// }
 
 const orderOfOp = (a:string):number => ({
   '~': 1,
@@ -36,7 +27,7 @@ const orderOfOp = (a:string):number => ({
 
 
 export const parse = (tokens:token[]):ASTnode => {
-  // console.log(tokens)
+  console.log(tokens)
   if (tokens.length === 0) {
     E.handle(E.newError(E.errorCode.SYNTAX_ERROR))
   }
@@ -50,6 +41,6 @@ export const parse = (tokens:token[]):ASTnode => {
   //if bracket -> new Bracket?(parse(slice until proper closing bracket), ()=>next.value)
   // console.log(tokens[next])
   if (['~', '_'].includes(tokens[next].value))
-    return new UnOp(parse(tokens.slice(next+1)), opMap['_']);
+    return new UnOp(parse(tokens.slice(1)), [(a:number)=>-a,(a:number)=>+a][+(tokens[0].value == '~')] )
   return new BinOp(parse(tokens.slice(0, next)), parse(tokens.slice(next+1)), opMap[tokens[next].value])
 }
