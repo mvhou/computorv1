@@ -39,13 +39,3 @@ export const handle = (error:err) => {
     }
     process.exit();
 }
-
-// 1 - - 1 = 2
-//                                                          1 - - 1
-//                                                            -
-//                                                      1                  u1
-//                                                                          *
-//                                                                     -1       1
-//
-//                                                              -
-//                                                                     

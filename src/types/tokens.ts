@@ -3,12 +3,7 @@ export enum tokenType {
     VARIABLE = 'variable',
     BINARY = 'binary',
     UNARY = 'unary',
-    EMPTY = 'empty'
+    PARENTHESES_OPEN = 'p_open',
+    PARENTHESES_CLOSE = 'p_close',
+    END = 'end'
 }
-
-export type token = {
-    type:tokenType
-    value:string
-}
-
-export const newToken = (t:tokenType, v:string) => ({ type: t, value: v, })
